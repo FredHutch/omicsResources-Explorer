@@ -1,6 +1,7 @@
 # Packages ----
 library(shiny)
 library(googlesheets4)
+library(dplyr)
 
 # Data ----
 omics_resources <- read_sheet("https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
@@ -37,7 +38,13 @@ ui <- fluidPage(
 
 # Define server ----
 server <- function(input, output) {
-
+  molecule <- reactive({
+    filter(omics_resources, molecule == input$molecule)
+  })
+  observeEvent(molecule(), {
+    choices <- unique(molecule()$name)
+    updateSelectInput(inputId = "name", choices = choices)
+  })
 }
 
 # Run the application ----
