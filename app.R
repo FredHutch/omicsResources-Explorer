@@ -1,51 +1,44 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
+# Packages ----
 library(shiny)
+library(googlesheets4)
 
-# Define UI for application that draws a histogram
+# Data ----
+omics_resources <- read_sheet("https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
+           sheet = "main")
+
+# Identify unique values in columns:
+# 'molecule', 'name', 'technique', 'identification', 'target',
+# 'data_stage', 'language_used', 'cloud_based', 'what_makes_this_tool_or_resource_unique',
+
+# Show these unique values in 'selectInput()'
+
+# Final output: values in 'tutorials_and_tool_links'
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
+  titlePanel("Omics Resources Explorer (WIP)"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("molecule", "Molecule", choices = unique(omics_resources$molecule)),
+      selectInput("name", "Name", choices = NULL),
+      selectInput("technique", "Technique", choices = NULL),
+      selectInput("id", "Identification", choices = NULL),
+      selectInput("target", "Target", choices = NULL),
+      selectInput("data_stage", "Data Stage", choices = NULL),
+      selectInput("language", "Language Used", choices = NULL),
+      selectInput("cloud_based", "Cloud Based", choices = NULL),
+      selectInput("unique_tool_resource", "Unique Aspects of Tool or Resource", choices = NULL)
+    ),
+    mainPanel(
+      uiOutput("customer"),
+      tableOutput("data")
     )
+  )
 )
 
-# Define server logic required to draw a histogram
+
+# Define server ----
 server <- function(input, output) {
 
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
 }
 
-# Run the application 
+# Run the application ----
 shinyApp(ui = ui, server = server)
