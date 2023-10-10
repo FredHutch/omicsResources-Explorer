@@ -3,22 +3,18 @@ library(shiny)
 library(googlesheets4)
 library(dplyr)
 
-# Data ----
-omics_resources <- read_sheet("https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
-           sheet = "main")
+# TODO: Refresh spreadsheet once a day
 
-# Identify unique values in columns:
-# 'molecule', 'name', 'technique', 'identification', 'target',
-# 'data_stage', 'language_used', 'cloud_based', 'what_makes_this_tool_or_resource_unique',
-
-# Show these unique values in 'selectInput()'
-
-# Final output: values in 'tutorials_and_tool_links'
+# Define UI ----
 ui <- fluidPage(
+  # Stylesheet
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "hutch_theme.css")
+  ),
   titlePanel("Omics Resources Explorer (WIP)"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("molecule", "Molecule", choices = unique(omics_resources$molecule)),
+      uiOutput("molecule_ui"),
       selectInput("name", "Name", choices = NULL),
       selectInput("technique", "Technique", choices = NULL),
       selectInput("id", "Identification", choices = NULL),
@@ -29,19 +25,32 @@ ui <- fluidPage(
       selectInput("unique_tool_resource", "Unique Aspects of Tool or Resource", choices = NULL)
     ),
     mainPanel(
-      uiOutput("customer"),
-      tableOutput("data")
+      uiOutput("link")
     )
   )
 )
 
 
 # Define server ----
-server <- function(input, output) {
+server <- function(input, output, session) {
+  # Reactive Dataset
+  omics_resources <- reactiveFileReader(1000,
+                                        session,
+                                        "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
+                                        googlesheets4::read_sheet,
+                                        sheet = "main")
+
+  output$molecule_ui <- renderUI({
+    selectInput("molecule", "Molecule", choices = unique(omics_resources()$molecule))
+  })
+
   molecule <- reactive({
-    filter(omics_resources, molecule == input$molecule)
+    req(input$molecule)
+    filter(omics_resources(), molecule == input$molecule)
   })
   observeEvent(molecule(), {
+    # ensures that any reactives or outputs that use the input won’t be updated
+    freezeReactiveValue(input, "name")
     choices <- unique(molecule()$name)
     updateSelectInput(inputId = "name", choices = choices)
   })
@@ -51,6 +60,7 @@ server <- function(input, output) {
     filter(molecule(), name == input$name)
   })
   observeEvent(name(), {
+    freezeReactiveValue(input, "technique")
     choices <- unique(name()$technique)
     updateSelectInput(inputId = "technique", choices = choices)
   })
@@ -60,6 +70,7 @@ server <- function(input, output) {
     filter(name(), technique == input$technique)
   })
   observeEvent(technique(), {
+    freezeReactiveValue(input, "id")
     choices <- unique(technique()$identification)
     updateSelectInput(inputId = "id", choices = choices)
   })
@@ -69,6 +80,7 @@ server <- function(input, output) {
     filter(technique(), identification == input$id)
   })
   observeEvent(identification(), {
+    freezeReactiveValue(input, "target")
     choices <- unique(identification()$target)
     updateSelectInput(inputId = "target", choices = choices)
   })
@@ -78,6 +90,7 @@ server <- function(input, output) {
     filter(identification(), target == input$target)
   })
   observeEvent(target(), {
+    freezeReactiveValue(input, "data_stage")
     choices <- unique(target()$data_stage)
     updateSelectInput(inputId = "data_stage", choices = choices)
   })
@@ -87,6 +100,7 @@ server <- function(input, output) {
     filter(target(), data_stage == input$data_stage)
   })
   observeEvent(data_stage(), {
+    freezeReactiveValue(input, "language_used")
     choices <- unique(data_stage()$language_used)
     updateSelectInput(inputId = "language_used", choices = choices)
   })
@@ -96,6 +110,7 @@ server <- function(input, output) {
     filter(data_stage(), language_used == input$language_used)
   })
   observeEvent(language_used(), {
+    freezeReactiveValue(input, "cloud_based")
     choices <- unique(language_used()$cloud_based)
     updateSelectInput(inputId = "cloud_based", choices = choices)
   })
@@ -105,8 +120,19 @@ server <- function(input, output) {
     filter(language_used(), cloud_based == input$cloud_based)
   })
   observeEvent(cloud_based(), {
+    freezeReactiveValue(input, "unique_tool_resource")
     choices <- unique(cloud_based()$what_makes_this_tool_or_resource_unique)
     updateSelectInput(inputId = "unique_tool_resource", choices = choices)
+  })
+
+  # Final output
+  output$link <- renderUI({
+    req(input$unique_tool_resource)
+    link <- cloud_based() %>%
+      filter(what_makes_this_tool_or_resource_unique == input$unique_tool_resource) %>%
+      pull(tutorials_and_tool_links)
+
+    a(link, href = link, target = "_blank")
   })
 }
 
