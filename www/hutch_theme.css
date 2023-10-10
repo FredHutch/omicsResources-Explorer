@@ -32,6 +32,12 @@ p {
 
 /* Action Buttons */
 
+/* Raw Data Button */
+#raw_data.btn {
+  color: #F4F4F4;
+  background-color: #FFB500;
+  font-family: Times;
+}
 /* Help Button */
 #help.btn {
   color: #F4F4F4;

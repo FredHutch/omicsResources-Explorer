@@ -12,8 +12,28 @@ ui <- fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "hutch_theme.css")
   ),
-  titlePanel("Omics Resources Explorer (WIP)",
-             windowTitle = "Omics Resource Explorer"),
+  titlePanel(tagList(
+    "Omics Resources Explorer",
+    span(
+      actionButton("raw_data",
+                   label = "Data",
+                   icon = icon("database"),
+                   width = "77px",
+                   onclick ="window.open(`https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing`, '_blank')"),
+      actionButton("help",
+                   label = "Help",
+                   icon = icon("circle-exclamation"),
+                   width = "77px",
+                   onclick ="window.open(`https://github.com/FredHutch/omicsResources-Explorer#getting-help`, '_blank')"),
+      actionButton("github",
+                   label = "Code",
+                   icon = icon("github"),
+                   width = "77px",
+                   onclick ="window.open(`https://github.com/FredHutch/omicsResources-Explorer`, '_blank')"),
+      style = "position:absolute;right:2em;"
+    )
+  ),
+  windowTitle = "Omics Resources Explorer (WIP)"),
   hr(),
   sidebarLayout(
     sidebarPanel(
