@@ -13,8 +13,11 @@ knitr::opts_chunk$set(
 
 # Omics Resources Explorer
 
-Omics Resources Explorer is an open source web application. WIP
+Omics Resources Explorer is an open source web application that offers suggestions for genomics tutorials and tools based on your specific search criteria, including molecules, techniques, and programming languages. It utilizes a publicly accessible [Google Sheet](https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing) to populate the selection boxes with relevant values and show the appropriate link to a tutorial or tool.
 
+It employs a [hierarchical selection box](https://mastering-shiny.org/action-dynamic.html?q=hier#hierarchical-select) approach to dynamically populate the selection boxes based on your prior choices. On the left-hand side, you'll notice a sequence of selection boxes that include categories such as molecule, name, technique, identification, target, data stage, language used, cloud-based features, and tool uniqueness.
+
+As you make a selection for the molecule category, it will display the relevant choices in the subsequent selection boxes. You can then proceed to choose the name, followed by the technique, identification, and so on.
 
 ## Getting Help
 
