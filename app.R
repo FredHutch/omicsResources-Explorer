@@ -3,7 +3,8 @@ library(shiny)
 library(googlesheets4)
 library(dplyr)
 
-# TODO: Refresh spreadsheet once a day
+# Setup ----
+googlesheets4::gs4_deauth()
 
 # Define UI ----
 ui <- fluidPage(
