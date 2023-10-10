@@ -6,7 +6,7 @@ RUN apt-get install -y curl libfontconfig1-dev libharfbuzz-dev libfribidi-dev li
 
 RUN R -e "install.packages(c('dplyr', 'shiny', 'googlesheets4'), repos='https://cran.rstudio.com/')"
 
-ADD ./app /app
+ADD . /app
 
 WORKDIR /app
 
