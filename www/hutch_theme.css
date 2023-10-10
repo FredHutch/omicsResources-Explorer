@@ -30,30 +30,8 @@ p {
   width: 780px;
 }
 
-/* Video Title */
-#video_info.shiny-html-output {
-  font-family: Arial;
-  font-size: 25px;
-  font-weight: bold;
-  color: #1c3b61;
-}
-
 /* Action Buttons */
 
-/* Get Started Button */
-#get_started.btn {
-  font-family: Arial;
-  font-weight: bold;
-  color: #F4F4F4;
-  background-color: #0A799A;
-  border-radius: 12px;
-}
-/* Demo App Button */
-#demo.btn {
-  color: #F4F4F4;
-  background-color: #FFB500;
-  font-family: Times;
-}
 /* Help Button */
 #help.btn {
   color: #F4F4F4;
@@ -75,22 +53,6 @@ p {
   border-radius: 12px;
 }
 
-/* Download Button */
-#download_btn.btn {
-  font-family: Arial;
-  font-weight: bold;
-  color: #F4F4F4;
-  background-color: #0A799A;
-  border-radius: 12px;
-}
-/* Email button */
-#send_email.btn {
-  font-family: Arial;
-  font-weight: bold;
-  color: #F4F4F4;
-  background-color: #FFB500;
-  border-radius: 12px;
-}
 
 /* selectInput Label */
 .control-label {

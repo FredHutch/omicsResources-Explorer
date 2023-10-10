@@ -12,7 +12,9 @@ ui <- fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "hutch_theme.css")
   ),
-  titlePanel("Omics Resources Explorer (WIP)"),
+  titlePanel("Omics Resources Explorer (WIP)",
+             windowTitle = "Omics Resource Explorer"),
+  hr(),
   sidebarLayout(
     sidebarPanel(
       uiOutput("molecule_ui"),
@@ -23,7 +25,14 @@ ui <- fluidPage(
       selectInput("data_stage", "Data Stage", choices = NULL),
       selectInput("language_used", "Language Used", choices = NULL),
       selectInput("cloud_based", "Cloud Based", choices = NULL),
-      selectInput("unique_tool_resource", "Unique Aspects of Tool or Resource", choices = NULL)
+      selectInput("unique_tool_resource", "Unique Aspects of Tool or Resource", choices = NULL),
+      br(),
+      h5("Built with",
+         img(src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", height = "30px"),
+         "by",
+         img(src = "img/posit.jpeg", height = "30px")
+      ),
+      tags$img(src = "img/logo.png", width = "90%")
     ),
     mainPanel(
       uiOutput("link")
