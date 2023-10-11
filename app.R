@@ -12,6 +12,8 @@ ui <- fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "hutch_theme.css")
   ),
+  # Favicon
+  tags$head(tags$link(rel="shortcut icon", href="img/favicon.ico")),
   titlePanel(tagList(
     "Omics Resources Explorer",
     span(
