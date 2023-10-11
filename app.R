@@ -10,7 +10,7 @@ googlesheets4::gs4_deauth()
 ui <- fluidPage(
   # Stylesheet
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "hutch_theme.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "i/hutch_theme.css")
   ),
   # Favicon
   tags$head(tags$link(rel="shortcut icon", href="img/favicon.ico")),
@@ -52,9 +52,9 @@ ui <- fluidPage(
       h5("Built with",
          img(src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", height = "30px"),
          "by",
-         img(src = "img/posit.jpeg", height = "30px")
+         img(src = "i/img/posit.jpeg", height = "30px")
       ),
-      tags$img(src = "img/logo.png", width = "90%")
+      tags$img(src = "i/img/logo.png", width = "90%")
     ),
     mainPanel(
       uiOutput("link")
@@ -169,4 +169,12 @@ server <- function(input, output, session) {
 }
 
 # Run the application ----
-shinyApp(ui = ui, server = server)
+addResourcePath("/i", file.path(getwd(), "www"))
+options <- list()
+if (!interactive()) {
+  options$port <- 3838
+  options$launch.browser <- FALSE
+  options$host <- "0.0.0.0"
+
+}
+shinyApp(ui = ui, server = server, options = options)
