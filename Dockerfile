@@ -1,5 +1,7 @@
 FROM fredhutch/r-shiny-base:4.3.1
 
+RUN echo break cache
+
 RUN apt-get --allow-releaseinfo-change update -y
 
 RUN apt-get install -y curl libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype-dev libtiff5-dev libsodium-dev
