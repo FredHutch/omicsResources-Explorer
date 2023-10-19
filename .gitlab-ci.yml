@@ -19,7 +19,7 @@ stages:
 build:
   stage: build
   script:
-    - docker build -no-cache -t sc-registry.fredhutch.org/exploreomics:test .
+    - docker build --no-cache -t sc-registry.fredhutch.org/exploreomics:test .
     - docker push sc-registry.fredhutch.org/exploreomics:test
 
 test:
