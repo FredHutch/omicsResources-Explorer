@@ -15,7 +15,7 @@ ui <- fluidPage(style = "max-width: 500px;",
                 shinyWidgets::setBackgroundImage("/i/background.jpg"),
                 # css
                 tags$head(
-                  tags$link(rel = "stylesheet", type = "text/css", href = "/i/hutch_theme.css"),
+                  # tags$link(rel = "stylesheet", type = "text/css", href = "/i/hutch_theme.css"),
                   tags$head(tags$link(rel="shortcut icon", href="/i/img/favicon.ico"))
                 ),
                 # title
