@@ -78,6 +78,16 @@ server <- function(input, output, session) {
 
 }
 
+# Run the application ----
+addResourcePath("/i", file.path(getwd(), "www"))
+options <- list()
+if (!interactive()) {
+  options$port <- 3838
+  options$launch.browser <- FALSE
+  options$host <- "0.0.0.0"
+
+}
+
 shinyApp(ui, server)
 
 # Setup ----
@@ -307,14 +317,3 @@ shinyApp(ui, server)
 # #     a(link, href = link, target = "_blank")
 # #   })
 #
-#
-# # Run the application ----
-# addResourcePath("/i", file.path(getwd(), "www"))
-# options <- list()
-# if (!interactive()) {
-#   options$port <- 3838
-#   options$launch.browser <- FALSE
-#   options$host <- "0.0.0.0"
-#
-# }
-# shinyApp(ui = ui, server = server, options = options)
