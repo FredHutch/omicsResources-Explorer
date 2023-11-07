@@ -180,4 +180,4 @@ if (!interactive()) {
 
 }
 
-shinyApp(ui, server)
+shinyApp(ui, server, options=options)
