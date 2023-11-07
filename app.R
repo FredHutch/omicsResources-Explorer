@@ -12,11 +12,11 @@ library(dplyr)
 # Shiny App ----
 ui <- fluidPage(style = "max-width: 500px;",
                 # background image
-                shinyWidgets::setBackgroundImage("background.jpg"),
+                shinyWidgets::setBackgroundImage("/i/background.jpg"),
                 # css
                 tags$head(
-                  tags$link(rel = "stylesheet", type = "text/css", href = "hutch_theme.css"),
-                  tags$head(tags$link(rel="shortcut icon", href="img/favicon.ico"))
+                  tags$link(rel = "stylesheet", type = "text/css", href = "/i/hutch_theme.css"),
+                  tags$head(tags$link(rel="shortcut icon", href="/i/img/favicon.ico"))
                 ),
                 # title
                 titlePanel("Omics Resource Explorer", windowTitle = "Omics Resource Explorer"),
