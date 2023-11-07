@@ -7,7 +7,7 @@ library(googlesheets4)
 library(dplyr)
 
 # Setup ----
-# googlesheets4::gs4_deauth()
+googlesheets4::gs4_deauth()
 
 # Shiny App ----
 ui <- fluidPage(style = "max-width: 500px;",
@@ -74,20 +74,13 @@ ui <- fluidPage(style = "max-width: 500px;",
 
 
 server <- function(input, output, session) {
-  # omics_resources <- reactiveFileReader(1000, session,
-  #                                       "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
-  #                                       googlesheets4::read_sheet,
-  #                                       sheet = "main",
-  #                                       col_names = c("molecule",
-  #                                                     "technique",
-  #                                                     "molecule_aspect",
-  #                                                     "specialty_target",
-  #                                                     "data_stage",
-  #                                                     "programming_language",
-  #                                                     "cloud",
-  #                                                     "description",
-  #                                                     "tutorials_and_tool_links"),
-  #                                       skip = 1)
+  omics_resources <- reactiveFileReader(1000, session,
+                                        "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
+                                        googlesheets4::read_sheet,
+                                        sheet = "main",
+                                        col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
+                                                      "data_stage", "programming_language", "cloud", "description", "tutorials_and_tool_links"),
+                                        skip = 1)
 
   # molecule
   output$molecule_ui <- renderUI({
