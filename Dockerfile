@@ -4,7 +4,7 @@ RUN apt-get --allow-releaseinfo-change update -y
 
 RUN apt-get install -y curl libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype-dev libtiff5-dev libsodium-dev
 
-RUN R -e "install.packages(c('dplyr', 'shiny', 'googlesheets4'), repos='https://cran.rstudio.com/')"
+RUN R -e "install.packages(c('dplyr', 'shiny', 'googlesheets4', 'shinyglide'), repos='https://cran.rstudio.com/')"
 
 ADD . /app
 
@@ -12,7 +12,7 @@ WORKDIR /app
 
 # make sure all packages are installed
 # because R does not fail when there's an error installing a package.
-RUN R -f check.R --args dplyr shiny googlesheets4
+RUN R -f check.R --args dplyr shiny googlesheets4 shinyglide
 
 EXPOSE 3838
 
