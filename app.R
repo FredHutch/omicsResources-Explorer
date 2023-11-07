@@ -88,7 +88,7 @@ if (!interactive()) {
 
 }
 
-shinyApp(ui, server)
+shinyApp(ui, server, options=options)
 
 # Setup ----
 # googlesheets4::gs4_deauth()
