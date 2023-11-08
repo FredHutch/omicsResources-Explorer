@@ -4,10 +4,73 @@ library(shinyglide)
 library(shinyWidgets)
 library(shinyglide)
 library(googlesheets4)
+library(readxl)
 library(dplyr)
 
 # Setup ----
 googlesheets4::gs4_deauth()
+
+css <-
+"
+/* Omics Resource Explorer */
+h2 {
+  font-family: Times;
+  font-size: 38px;
+  color: #1c3b61;
+  font-weight: bold;
+}
+
+/* Question 1, 2, etc */
+h3 {
+  font-family: Times;
+  font-size: 28px;
+  color: #1c3b61;
+  font-weight: bold;
+}
+
+/* Paragraph */
+p {
+ font-family: Times;
+ font-size: 17px;
+}
+
+/* selectInput Label */
+.control-label {
+  font-family: Arial;
+  color: #1c3b61;
+}
+
+/* Next, Back buttons */
+.my-control {
+  display: block;
+  position: absolute;
+  line-height: 1;
+  font-size: 1.5em;
+  color: #1c3b61;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.prev-screen {
+  left: 20px;
+}
+.next-screen,
+.last-screen {
+  right: 10px;
+}
+"
+
+controls <- tags$div(
+  tags$div(class="my-control prev-screen"),
+  tags$div(class="my-control next-screen"),
+  div(`data-glide-el`="controls",
+      tags$a(
+        class="my-control last-screen",
+        `data-glide-dir` = "<<",
+        icon("repeat", lib = "glyphicon")
+      )
+  )
+)
+
 
 # Shiny App ----
 ui <- fluidPage(style = "max-width: 500px;",
@@ -15,7 +78,7 @@ ui <- fluidPage(style = "max-width: 500px;",
                 shinyWidgets::setBackgroundImage("/i/background.jpg"),
                 # css
                 tags$head(
-                  # tags$link(rel = "stylesheet", type = "text/css", href = "/i/hutch_theme.css"),
+                  tags$style(css),
                   tags$head(tags$link(rel="shortcut icon", href="/i/img/favicon.ico"))
                 ),
                 # title
@@ -23,6 +86,7 @@ ui <- fluidPage(style = "max-width: 500px;",
                 br(),
                 glide(
                   height = "350px",
+                  custom_controls = controls,
                   screen(
                     p("Omics Resources Explorer is an open source web application that offers suggestions for genomics tutorials and
                      tools based on your specific search criteria, including molecules, techniques, and programming languages.
@@ -64,10 +128,8 @@ ui <- fluidPage(style = "max-width: 500px;",
                     selectInput("cloud", "Do you need a cloud based tool?", choices = NULL)
                   ),
                   screen(
-                    p("This screen is for description.")
-                  ),
-                  screen(
-                    p("This screen is for tutorial and tool links")
+                    h3("Links to Tutorials/Tools:")
+                    # htmlOutput("tutorial_and_tool_link")
                   )
                 )
 )
@@ -79,8 +141,17 @@ server <- function(input, output, session) {
                                         googlesheets4::read_sheet,
                                         sheet = "main",
                                         col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
-                                                      "data_stage", "programming_language", "cloud", "description", "tutorials_and_tool_links"),
+                                                      "data_stage", "programming_language", "cloud", "description", "tutorial_and_tool_link",
+                                                      "selector"),
                                         skip = 1)
+
+  # omics_resources <- reactive({
+  #   read_excel("raw_data.xlsx", sheet = "main",
+  #              col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
+  #                            "data_stage", "programming_language", "cloud", "description",
+  #                            "tutorial_and_tool_link"),
+  #              skip = 1)
+  # })
 
   # molecule
   output$molecule_ui <- renderUI({
@@ -157,6 +228,13 @@ server <- function(input, output, session) {
     req(input$cloud)
     filter(programming_language(), cloud == input$cloud)
   })
+
+
+  output$tutorial_and_tool_link <- renderUI({
+    tags$iframe(src = "https://informatics.fas.harvard.edu/atac-seq-guidelines.html", height=300, width=300)
+  })
+
+
 }
 
 
