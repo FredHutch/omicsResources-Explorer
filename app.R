@@ -6,12 +6,13 @@ library(shinyglide)
 library(googlesheets4)
 library(readxl)
 library(dplyr)
+library(bslib)
 
 # Setup ----
 googlesheets4::gs4_deauth()
 
 css <-
-"
+  "
 /* Omics Resource Explorer */
 h2 {
   font-family: Times;
@@ -128,8 +129,8 @@ ui <- fluidPage(style = "max-width: 500px;",
                     selectInput("cloud", "Do you need a cloud based tool?", choices = NULL)
                   ),
                   screen(
-                    h3("Links to Tutorials/Tools:")
-                    # htmlOutput("tutorial_and_tool_link")
+                    h3("Recommended Tutorials or Tools"),
+                    uiOutput("tutorial_tool")
                   )
                 )
 )
@@ -145,11 +146,12 @@ server <- function(input, output, session) {
                                                       "selector"),
                                         skip = 1)
 
+  # Test Code:
   # omics_resources <- reactive({
   #   read_excel("raw_data.xlsx", sheet = "main",
   #              col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
   #                            "data_stage", "programming_language", "cloud", "description",
-  #                            "tutorial_and_tool_link"),
+  #                            "tutorial_and_tool_link", "selector"),
   #              skip = 1)
   # })
 
@@ -230,8 +232,30 @@ server <- function(input, output, session) {
   })
 
 
-  output$tutorial_and_tool_link <- renderUI({
-    tags$iframe(src = "https://informatics.fas.harvard.edu/atac-seq-guidelines.html", height=300, width=300)
+  output$tutorial_tool <- renderUI({
+    layout_column_wrap(
+      width = 1/3,
+      height = 300,
+      card(
+        card_header(
+          class = "bg-dark",
+          "URL comes here"
+        ),
+        "Description comes here"
+      ),
+      card(
+        card_header(
+          class = "bg-dark",
+          "URL comes here"
+        ),
+        "Description comes here"
+      ),
+      card(
+        card_header(
+          "URL comes here"
+        ),
+        "Description comes here")
+    )
   })
 
 
