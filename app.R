@@ -144,22 +144,22 @@ ui <- fluidPage(style = "max-width: 500px;",
 
 
 server <- function(input, output, session) {
-  # omics_resources <- reactiveFileReader(1000, session,
-  #                                       "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
-  #                                       googlesheets4::read_sheet,
-  #                                       sheet = "main",
-  #                                       col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
-  #                                                     "data_stage", "programming_language", "cloud", "description", "tutorial_and_tool_link"),
-  #                                       skip = 1)
+  omics_resources <- reactiveFileReader(1000, session,
+                                        "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
+                                        googlesheets4::read_sheet,
+                                        sheet = "main",
+                                        col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
+                                                      "data_stage", "programming_language", "cloud", "description", "tutorial_and_tool_link"),
+                                        skip = 1)
 
   # Test Code:
-  omics_resources <- reactive({
-    read_excel("raw_data.xlsx", sheet = "main",
-               col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
-                             "data_stage", "programming_language", "cloud", "description",
-                             "tutorial_and_tool_link"),
-               skip = 1)
-  })
+  # omics_resources <- reactive({
+  #   read_excel("raw_data.xlsx", sheet = "main",
+  #              col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
+  #                            "data_stage", "programming_language", "cloud", "description",
+  #                            "tutorial_and_tool_link"),
+  #              skip = 1)
+  # })
 
   # molecule
   output$molecule_ui <- renderUI({
@@ -256,10 +256,12 @@ server <- function(input, output, session) {
       )
     }
 
-    layout_column_wrap(
-      width = 1 / num_link,
-      height = 300,
-      !!!card_list
+    do.call(
+      layout_column_wrap,
+      c(
+        list(width = 1 / num_link, heights_equal = "all", fixed_width = FALSE, fill = TRUE),
+        card_list
+      )
     )
   })
 }
