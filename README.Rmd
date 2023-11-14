@@ -11,6 +11,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+hahaha
+
 # Omics Resources Explorer
 
 Omics Resources Explorer is an open source web application that offers suggestions for genomics tutorials and tools based on your specific search criteria, including molecules, techniques, and programming languages. It utilizes a publicly accessible [Google Sheet](https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing) to populate the selection boxes with relevant values and show the appropriate link to a tutorial or tool.
