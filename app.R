@@ -5,7 +5,6 @@ library(shinyWidgets)
 library(shinyglide)
 library(googlesheets4)
 library(readxl)
-library(rlang)
 library(dplyr)
 library(bslib)
 
