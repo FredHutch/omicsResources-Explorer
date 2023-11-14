@@ -5,6 +5,7 @@ library(shinyWidgets)
 library(shinyglide)
 library(googlesheets4)
 library(readxl)
+library(rlang)
 library(dplyr)
 library(bslib)
 
@@ -93,12 +94,14 @@ ui <- fluidPage(style = "max-width: 500px;",
                      tools based on your specific search criteria, including molecules, techniques, and programming languages.
                       It utilizes a publicly accessible ", a("Google Sheet", href = "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing", target = "_blank"),
                       "to populate the selection boxes with relevant values and show the appropriate link to a tutorial or tool.", .noWS = "outside"),
-                    p("It employs a ", a("hierarchical selection box approach", href = "https://mastering-shiny.org/action-dynamic.html?q=hier#hierarchical-select", .noWS = "outside"),
-                      " to dynamically populate the selection boxes based on your prior choices. As you make a selection for the molecule
-                      category, it will display the relevant choices in the subsequent selection boxes.
+                    p("As you make a selection for the molecule category, it will display the relevant choices in the subsequent selection boxes.
                       You can then proceed to choose the technique, followed by the molecular aspect, specialty target, and so on."),
-
+                    p("Source code is available on ", a("GitHub", href = "https://github.com/FredHutch/omicsResources-Explorer", target = "_blank", .noWS = "outside"),
+                      ". If you are confused, please open a ", a("GitHub issue", href = "https://github.com/FredHutch/omicsResources-Explorer/issues/new", target = "_blank"),
+                      "and let us know what you are struggling with."),
                     p("Please click on Next to go to the next screen.")
+
+
                   ),
                   screen(
                     h3("Question 1"),
@@ -106,27 +109,32 @@ ui <- fluidPage(style = "max-width: 500px;",
                   ),
                   screen(
                     h3("Question 2"),
-                    selectInput("technique", "What technique is used?", choices = NULL)
+                    selectInput("technique", "What technique is used?",
+                                multiple = TRUE, choices = NULL)
                   ),
                   screen(
                     h3("Question 3"),
-                    selectInput("molecule_aspect", "Which molecular aspect was targeted for this data?", choices = NULL)
+                    selectInput("molecule_aspect", "Which molecular aspect was targeted for this data?",
+                                multiple = TRUE, choices = NULL)
                   ),
                   screen(
                     h3("Question 4"),
-                    selectInput("specialty_target", "Which specialty target are you analyzing?", choices = NULL)
+                    selectInput("specialty_target", "Which specialty target are you analyzing?",
+                                multiple = TRUE, choices = NULL)
                   ),
                   screen(
                     h3("Question 5"),
-                    selectInput("data_stage", "Which data stage or info are you looking for?", choices = NULL)
+                    selectInput("data_stage", "Which data stage or info are you looking for?",
+                                multiple = TRUE, choices = NULL)
                   ),
                   screen(
                     h3("Question 6"),
-                    selectInput("programming_language", "What programming language do you prefer?", choices = NULL)
+                    selectInput("programming_language", "What programming language do you prefer?",
+                                multiple = TRUE, choices = NULL)
                   ),
                   screen(
                     h3("Question 7"),
-                    selectInput("cloud", "Do you need a cloud based tool?", choices = NULL)
+                    selectInput("cloud", "Do you need a cloud based tool?", multiple = TRUE, choices = NULL)
                   ),
                   screen(
                     h3("Recommended Tutorials or Tools"),
@@ -137,32 +145,31 @@ ui <- fluidPage(style = "max-width: 500px;",
 
 
 server <- function(input, output, session) {
-  omics_resources <- reactiveFileReader(1000, session,
-                                        "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
-                                        googlesheets4::read_sheet,
-                                        sheet = "main",
-                                        col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
-                                                      "data_stage", "programming_language", "cloud", "description", "tutorial_and_tool_link",
-                                                      "selector"),
-                                        skip = 1)
+  # omics_resources <- reactiveFileReader(1000, session,
+  #                                       "https://docs.google.com/spreadsheets/d/1_4VN5MQVPO6KK14mH0P8zBz25s7a-he67qS6Fst6ZTo/edit?usp=sharing",
+  #                                       googlesheets4::read_sheet,
+  #                                       sheet = "main",
+  #                                       col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
+  #                                                     "data_stage", "programming_language", "cloud", "description", "tutorial_and_tool_link"),
+  #                                       skip = 1)
 
   # Test Code:
-  # omics_resources <- reactive({
-  #   read_excel("raw_data.xlsx", sheet = "main",
-  #              col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
-  #                            "data_stage", "programming_language", "cloud", "description",
-  #                            "tutorial_and_tool_link", "selector"),
-  #              skip = 1)
-  # })
+  omics_resources <- reactive({
+    read_excel("raw_data.xlsx", sheet = "main",
+               col_names = c("molecule", "technique", "molecule_aspect", "specialty_target",
+                             "data_stage", "programming_language", "cloud", "description",
+                             "tutorial_and_tool_link"),
+               skip = 1)
+  })
 
   # molecule
   output$molecule_ui <- renderUI({
-    selectInput("molecule", "What molecule was analyzed in the data?",
+    selectInput("molecule", "What molecule was analyzed in the data?", multiple = TRUE,
                 choices = unique(omics_resources()$molecule))
   })
   molecule <- reactive({
     req(input$molecule)
-    filter(omics_resources(), molecule == input$molecule)
+    filter(omics_resources(), molecule %in% input$molecule)
   })
 
   # technique
@@ -173,7 +180,7 @@ server <- function(input, output, session) {
   })
   technique <- reactive({
     req(input$technique)
-    filter(molecule(), technique == input$technique)
+    filter(molecule(), technique %in% input$technique)
   })
 
   # molecule aspect
@@ -184,7 +191,7 @@ server <- function(input, output, session) {
   })
   molecule_aspect <- reactive({
     req(input$molecule_aspect)
-    filter(technique(), molecule_aspect == input$molecule_aspect)
+    filter(technique(), molecule_aspect %in% input$molecule_aspect)
   })
 
   # specialty target
@@ -195,7 +202,7 @@ server <- function(input, output, session) {
   })
   specialty_target <- reactive({
     req(input$specialty_target)
-    filter(molecule_aspect(), specialty_target == input$specialty_target)
+    filter(molecule_aspect(), specialty_target %in% input$specialty_target)
   })
 
   # data stage
@@ -206,7 +213,7 @@ server <- function(input, output, session) {
   })
   data_stage <- reactive({
     req(input$data_stage)
-    filter(specialty_target(), data_stage == input$data_stage)
+    filter(specialty_target(), data_stage %in% input$data_stage)
   })
 
   # programming language
@@ -217,7 +224,7 @@ server <- function(input, output, session) {
   })
   programming_language <- reactive({
     req(input$programming_language)
-    filter(data_stage(), programming_language == input$programming_language)
+    filter(data_stage(), programming_language %in% input$programming_language)
   })
 
   # cloud
@@ -228,37 +235,34 @@ server <- function(input, output, session) {
   })
   cloud <- reactive({
     req(input$cloud)
-    filter(programming_language(), cloud == input$cloud)
+    filter(programming_language(), cloud %in% input$cloud)
   })
 
+  # recommended tutorials or tools
+  output$tutorial_tool <-  renderUI({
 
-  output$tutorial_tool <- renderUI({
+    final_df <- cloud()
+    num_link <- nrow(final_df)
+    card_list <- vector("list", num_link)
+
+    for (ii in seq_len(num_link)) {
+      card_list[[ii]] <- card(
+        card_header(
+          class = "bg-dark",
+          tags$a(href = final_df$tutorial_and_tool_link[ii],
+                 final_df$tutorial_and_tool_link[ii],
+                 target="_blank")
+        ),
+        final_df$description[ii]
+      )
+    }
+
     layout_column_wrap(
-      width = 1/3,
+      width = 1 / num_link,
       height = 300,
-      card(
-        card_header(
-          class = "bg-dark",
-          "URL comes here"
-        ),
-        "Description comes here"
-      ),
-      card(
-        card_header(
-          class = "bg-dark",
-          "URL comes here"
-        ),
-        "Description comes here"
-      ),
-      card(
-        card_header(
-          "URL comes here"
-        ),
-        "Description comes here")
+      !!!card_list
     )
   })
-
-
 }
 
 
