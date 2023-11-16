@@ -99,8 +99,6 @@ ui <- fluidPage(style = "max-width: 500px;",
                       ". If you are confused, please open a ", a("GitHub issue", href = "https://github.com/FredHutch/omicsResources-Explorer/issues/new", target = "_blank"),
                       "and let us know what you are struggling with."),
                     p("Please click on Next to go to the next screen.")
-
-
                   ),
                   screen(
                     h3("Question 1"),
@@ -175,10 +173,14 @@ server <- function(input, output, session) {
   observeEvent(molecule(), {
     freezeReactiveValue(input, "technique")
     choices <- unique(molecule()$technique)
-    updateSelectInput(inputId = "technique", choices = choices)
+
+    if (length(choices) == 1) {
+      updateSelectInput(inputId = "technique", choices = choices, selected = choices)
+    } else {
+      updateSelectInput(inputId = "technique", choices = choices)
+    }
   })
   technique <- reactive({
-    req(input$technique)
     filter(molecule(), technique %in% input$technique)
   })
 
@@ -186,7 +188,13 @@ server <- function(input, output, session) {
   observeEvent(technique(), {
     freezeReactiveValue(input, "molecule_aspect")
     choices <- unique(technique()$molecule_aspect)
-    updateSelectInput(inputId = "molecule_aspect", choices = choices)
+
+
+    if (length(choices) == 1) {
+      updateSelectInput(inputId = "molecule_aspect", choices = choices, selected = choices)
+    } else {
+      updateSelectInput(inputId = "molecule_aspect", choices = choices)
+    }
   })
   molecule_aspect <- reactive({
     req(input$molecule_aspect)
@@ -197,7 +205,12 @@ server <- function(input, output, session) {
   observeEvent(molecule_aspect(), {
     freezeReactiveValue(input, "specialty_target")
     choices <- unique(molecule_aspect()$specialty_target)
-    updateSelectInput(inputId = "specialty_target", choices = choices)
+
+    if (length(choices) == 1) {
+      updateSelectInput(inputId = "specialty_target", choices = choices, selected = choices)
+    } else {
+      updateSelectInput(inputId = "specialty_target", choices = choices)
+    }
   })
   specialty_target <- reactive({
     req(input$specialty_target)
@@ -208,7 +221,12 @@ server <- function(input, output, session) {
   observeEvent(specialty_target(), {
     freezeReactiveValue(input, "data_stage")
     choices <- unique(specialty_target()$data_stage)
-    updateSelectInput(inputId = "data_stage", choices = choices)
+
+    if (length(choices) == 1) {
+      updateSelectInput(inputId = "data_stage", choices = choices, selected = choices)
+    } else {
+      updateSelectInput(inputId = "data_stage", choices = choices)
+    }
   })
   data_stage <- reactive({
     req(input$data_stage)
@@ -219,7 +237,12 @@ server <- function(input, output, session) {
   observeEvent(data_stage(), {
     freezeReactiveValue(input, "programming_language")
     choices <- unique(data_stage()$programming_language)
-    updateSelectInput(inputId = "programming_language", choices = choices)
+
+    if (length(choices) == 1) {
+      updateSelectInput(inputId = "programming_language", choices = choices, selected = choices)
+    } else {
+      updateSelectInput(inputId = "programming_language", choices = choices)
+    }
   })
   programming_language <- reactive({
     req(input$programming_language)
@@ -230,7 +253,12 @@ server <- function(input, output, session) {
   observeEvent(programming_language(), {
     freezeReactiveValue(input, "cloud")
     choices <- unique(programming_language()$cloud)
-    updateSelectInput(inputId = "cloud", choices = choices)
+
+    if (length(choices) == 1) {
+      updateSelectInput(inputId = "cloud", choices = choices, selected = choices)
+    } else {
+      updateSelectInput(inputId = "cloud", choices = choices)
+    }
   })
   cloud <- reactive({
     req(input$cloud)
